@@ -59,6 +59,7 @@ class GenericONNXEmbedding:
             requires_fp16=model_size == "large" or self.model_type == "text",
             openvino_device=device,
         )
+        print(f"Detected providers {self.providers} and options {self.provider_options}")
 
         self.download_path = os.path.join(MODEL_CACHE_DIR, self.model_name)
         self.tokenizer = None
@@ -131,6 +132,7 @@ class GenericONNXEmbedding:
                 self.tokenizer = self._load_tokenizer()
             else:
                 self.feature_extractor = self._load_feature_extractor()
+            print(f"loading model {os.path.join(self.download_path, self.model_file)}")
             self.session = self._load_model(
                 os.path.join(self.download_path, self.model_file)
             )
