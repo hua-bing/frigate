@@ -37,8 +37,19 @@ def get_ort_providers(
                 }
             )
         elif provider == "TensorrtExecutionProvider":
-            # TensorrtExecutionProvider uses too much memory without options to control it
-            pass
+            providers.append(provider)
+            os.makedirs("/config/model_cache/tensorrt/ort/trt-engines", exist_ok=True)
+            options.append(
+                {
+                    "trt_auxiliary_streams": 0,
+                    "trt_fp16_enable": requires_fp16
+                    and os.environ.get("USE_FP_16", "True"),
+                    "trt_timing_cache_enable": True,
+                    "trt_engine_cache_enable": True,
+                    "trt_timing_cache_path": "/config/model_cache/tensorrt/ort",
+                    "trt_engine_cache_path": "/config/model_cache/tensorrt/ort/trt-engines",
+                }
+            )
         elif provider == "OpenVINOExecutionProvider":
             os.makedirs("/config/model_cache/openvino/ort", exist_ok=True)
             providers.append(provider)
